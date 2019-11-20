@@ -3,7 +3,7 @@
 #define DATA_PIN 3
 #define LED_TYPE WS2812B
 #define COLOR_ORDER GRB
-#define NUM_LEDS 70
+#define NUM_LEDS 38
 #define BRIGHTNESS 96
 CRGB leds[NUM_LEDS];
 
@@ -12,8 +12,9 @@ CRGB leds[NUM_LEDS];
 
 /* the current address in the EEPROM (i.e. which byte we're going to write to next) */
 int addr = 0;
-int HIGHEST_TEMP_REACHED = -1;
-int MIN_TEMP = 28;
+int MAX_TEMP = -1;
+int addr_MIN_TEMP = 1;
+int MIN_TEMP = -1;
 
 /* How to use the DHT-22 sensor with Arduino uno
    Temperature and humidity sensor
@@ -40,9 +41,12 @@ void setup() {
   delay(3000); // initial delay of a few seconds is recommended
   FastLED.addLeds<LED_TYPE,DATA_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip); // initializes LED strip
   FastLED.setBrightness(BRIGHTNESS);// global brightness
-
-  HIGHEST_TEMP_REACHED = EEPROM.read(addr);
-  Serial.print("got from EEEPROM: ");Serial.println(HIGHEST_TEMP_REACHED);
+  showProgramCleanUp(100);
+  
+  MAX_TEMP = EEPROM.read(addr);
+  Serial.print("MAX_TEMP from EEEPROM: ");Serial.println(MAX_TEMP);
+  MIN_TEMP = EEPROM.read(addr_MIN_TEMP);
+  Serial.print("MIN_TEMP from EEEPROM: ");Serial.println(MIN_TEMP);
 }
 
 // switches off all LEDs
@@ -71,9 +75,9 @@ void showProgramRandom(int numIterations, long delayTime) {
 // switches on all LEDs. Each LED is shown in random color.
 // delayTime: indicates for how long LEDs are switched on.
 void showProgramColorByTemp(float temp, long delayTime) {  
-  int mapped = map(int(temp),MIN_TEMP,HIGHEST_TEMP_REACHED,160,255);
-  
+  int mapped = map(int(temp),MIN_TEMP,MAX_TEMP,160,255);
   Serial.print("mapped: ");Serial.println(mapped);
+  
   for (int i = 0; i < NUM_LEDS; ++i) {
     leds[i] = CHSV(mapped,255,255); // hue, saturation, value
   }
@@ -120,31 +124,17 @@ void loop() {
   Serial.print(" %, Temp: ");
   Serial.print(temp);
   Serial.println(" Celsius");
-
-  if (round( temp) > HIGHEST_TEMP_REACHED){
-    HIGHEST_TEMP_REACHED = round( temp);
-    EEPROM.write(addr, HIGHEST_TEMP_REACHED);
-    Serial.print("Reached to new HIGEST temp, Saving, ");Serial.println(HIGHEST_TEMP_REACHED);
+  temp = round(temp);
+  if (temp > MAX_TEMP){
+    MAX_TEMP = temp;
+    EEPROM.write(addr, MAX_TEMP);
+    Serial.print("Reached to new HIGEST temp, Saving: ");Serial.println(MAX_TEMP);
   }
-//  delay(10000); //Delay 2 sec.
-
+  if (temp < MIN_TEMP){
+    MIN_TEMP = temp;
+    EEPROM.write(addr_MIN_TEMP, MIN_TEMP);
+    Serial.print("Reached to new LOWEST temp, Saving: ");Serial.println(MIN_TEMP);
+  }
   showProgramColorByTemp(temp, 100); 
   
-//  showProgramCleanUp(2500); // clean up
-//  showProgramRandom(100, 100); // show "random" program
-  
-//  showProgramCleanUp(2500); // clean up
-//  showProgramRandom(10, 1000); // show "random" program
-//  
-//  showProgramCleanUp(2500); // clean up
-//  showProgramShiftSinglePixel(CRGB::Blue, 250); // show "shift single pixel program" with blue pixel
-//  
-//  showProgramCleanUp(2500); // clean up
-//  showProgramShiftSinglePixel(CRGB::Maroon, 100); // show "shift single pixel program" with maroon pixel
-//  
-//  showProgramCleanUp(2500); // clean up
-//  showProgramShiftMultiPixel(500); // show "shift multi pixel" program
-//  
-//  showProgramCleanUp(2500); // clean up
-//  showProgramShiftMultiPixel(50); // show "shift multi pixel" program
 }
