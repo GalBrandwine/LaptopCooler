@@ -59,7 +59,7 @@ void showProgramCleanUp(long delayTime) {
 }
 
 
-// switches on all LEDs. Each LED is shown in collor enterpulated by inputed temp.
+// switches on all LEDs. Each LED is shown in color enterpulated by inputted temp.
 // numIterations: indicates how often LEDs are switched on in random colors
 // delayTime: indicates for how long LEDs are switched on.
 void showProgramRandom(int numIterations, long delayTime) {
