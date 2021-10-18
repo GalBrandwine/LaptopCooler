@@ -13,7 +13,7 @@ CRGB leds[NUM_LEDS];
 int addr = 0;
 int MAX_TEMP = -1;
 int addr_MIN_TEMP = 1;
-int MIN_TEMP = 0;
+int MIN_TEMP = 26;
 
 /* How to use the DHT-22 sensor with Arduino uno
    Temperature and humidity sensor
@@ -44,7 +44,7 @@ void setup()
     MAX_TEMP = EEPROM.read(addr);
     Serial.print("MAX_TEMP from EEEPROM: ");
     Serial.println(MAX_TEMP);
-    // MIN_TEMP = EEPROM.read(addr_MIN_TEMP);
+    MIN_TEMP = EEPROM.read(addr_MIN_TEMP);
     Serial.print("MIN_TEMP from EEEPROM: ");
     Serial.println(MIN_TEMP);
 }
@@ -60,13 +60,37 @@ void showProgramCleanUp(long delayTime)
     delay(delayTime);
 }
 
+// switches off all LEDs
+void blinkInColor(CRGB::HTMLColorCode color, long delayTime)
+{
+    for (int i = 0; i < NUM_LEDS; ++i)
+    {
+        leds[i] = color;
+    }
+    FastLED.show();
+    delay(delayTime);
+    showProgramCleanUp(delayTime);
+
+    for (int i = 0; i < NUM_LEDS; ++i)
+    {
+        leds[i] = color;
+    }
+    FastLED.show();
+    delay(delayTime);
+    showProgramCleanUp(delayTime);
+}
+
 // switches on all LEDs. Each LED is shown in random color.
 // delayTime: indicates for how long LEDs are switched on.
-void showProgramColorByTemp(float temp, long delayTime)
+void showProgramColorByTemp(int currentTemp, long delayTime)
 {
+    Serial.println(__FUNCTION__);
     Serial.print("MAX_TEMP: ");
     Serial.println(MAX_TEMP);
-    int mapped = map(int(temp), MIN_TEMP, MAX_TEMP, 160, 255);
+    Serial.print("MIN_TEMP: ");
+    Serial.println(MIN_TEMP);
+
+    int mapped = map(currentTemp, MIN_TEMP, MAX_TEMP, 160, 355);
     Serial.print("mapped: ");
     Serial.println(mapped);
 
@@ -92,20 +116,23 @@ void loop()
     Serial.print(" %, Temp: ");
     Serial.print(temp);
     Serial.println(" Celsius");
-    temp = round(temp);
+
+    auto tempI = int(temp);
     if (temp > MAX_TEMP)
     {
         MAX_TEMP = temp;
         EEPROM.write(addr, MAX_TEMP);
         Serial.print("Reached to new HIGEST temp, Saving: ");
         Serial.println(MAX_TEMP);
+        blinkInColor(CRGB::Red, 300);
     }
-    // if (temp < MIN_TEMP)
-    // {
-    //     MIN_TEMP = temp;
-    //     EEPROM.write(addr_MIN_TEMP, MIN_TEMP);
-    //     Serial.print("Reached to new LOWEST temp, Saving: ");
-    //     Serial.println(MIN_TEMP);
-    // }
-    showProgramColorByTemp(temp, 100);
+    if (temp < MIN_TEMP)
+    {
+        MIN_TEMP = temp;
+        EEPROM.write(addr_MIN_TEMP, MIN_TEMP);
+        Serial.print("Reached to new LOWEST temp, Saving: ");
+        Serial.println(MIN_TEMP);
+        blinkInColor(CRGB::Blue, 300);
+    }
+    showProgramColorByTemp(tempI, 100);
 }
