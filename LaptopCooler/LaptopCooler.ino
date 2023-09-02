@@ -103,9 +103,9 @@ void showProgramColorByTemp(int currentTemp, long delayTime)
     Serial.print("MAX_TEMP: ");
     Serial.println(MAX_TEMP);
 
-    int mapped = map(currentTemp, MIN_TEMP, MAX_TEMP, 160, 355);
+    auto hue = map(currentTemp, MAX_TEMP, MIN_TEMP, HUE_RED, HUE_BLUE); // Lower TEMP gets bluer HUE
     Serial.print("mapped: ");
-    Serial.println(mapped);
+    Serial.println(hue);
 
     for (int i = 0; i < NUM_LEDS; ++i)
     {
