@@ -42,6 +42,27 @@ void resetEEPROM()
     EEPROM.write(addr, 0);
     EEPROM.write(addr_MIN_TEMP, 0);
 }
+void initialEEPROMReading()
+{
+    MAX_TEMP = EEPROM.read(addr);
+    Serial.print("MAX_TEMP from EEEPROM: ");
+    Serial.println(MAX_TEMP);
+    auto tempMin = EEPROM.read(addr_MIN_TEMP);
+    if (tempMin == 0)
+    {
+        Serial.print("Got initial values EEEPROM: ");
+        Serial.println(tempMin);
+
+        Serial.print("reseting to default:");
+        Serial.println(MIN_TEMP);
+        EEPROM.write(addr_MIN_TEMP, MIN_TEMP);
+    }
+    else
+    {
+        Serial.print("MIN_TEMP from EEEPROM: ");
+        Serial.println(MIN_TEMP);
+    }
+}
 void setup()
 {
     Serial.begin(9600);
@@ -53,12 +74,7 @@ void setup()
     showProgramCleanUp(100);
 
     // resetEEPROM();
-    MAX_TEMP = EEPROM.read(addr);
-    Serial.print("MAX_TEMP from EEEPROM: ");
-    Serial.println(MAX_TEMP);
-    MIN_TEMP = EEPROM.read(addr_MIN_TEMP);
-    Serial.print("MIN_TEMP from EEEPROM: ");
-    Serial.println(MIN_TEMP);
+    initialEEPROMReading();
 }
 
 // switches off all LEDs
