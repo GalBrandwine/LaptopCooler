@@ -1,3 +1,4 @@
+#include "/home/gal/dev/LaptopCooler/LaptopCooler/TfT_controller.hpp"
 // (c) Michael Schoeffler 2017, http://www.mschoeffler.de
 #include <FastLED.h>
 #define DATA_PIN 3
@@ -28,8 +29,8 @@ DHT dht(DHTPIN, DHTTYPE); //// Initialize DHT sensor for normal 16mhz Arduino
 
 // Variables
 //  int chk;
-float hum;  // Stores humidity value
-float temp; // Stores temperature value
+float hum;     // Stores humidity value
+float temp{0}; // Stores temperature value
 
 void resetEEPROM()
 {
@@ -66,9 +67,12 @@ void initialEEPROMReading()
 void setup()
 {
     Serial.begin(9600);
+    tft_ctrl::setup();
+    tft_ctrl::clearScreen();
+    tft_ctrl::drawHueCircle();
     dht.begin();
 
-    delay(3000);                                                                                     // initial delay of a few seconds is recommended
+    // delay(3000);                                                                                     // initial delay of a few seconds is recommended
     FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip); // initializes LED strip
     FastLED.setBrightness(BRIGHTNESS);                                                               // global brightness
     showProgramCleanUp(100);
@@ -138,8 +142,8 @@ void loop()
 {
     // Read data and store it to variables hum and temp
     hum = dht.readHumidity();
-    temp = dht.readTemperature();
-
+    // temp = dht.readTemperature();
+    temp++;
     // Print temp and humidity values to serial monitor
     Serial.print("Humidity: ");
     Serial.print(hum);
@@ -163,5 +167,10 @@ void loop()
         Serial.println(MIN_TEMP);
         blinkInColor(CRGB::Blue, 300);
     }
+    // tft_ctrl::clearScreen();
+    // tft_ctrl::drawHueCircle();
+    tft_ctrl::drawTempOnHueCircle(temp);
     showProgramColorByTemp(int(temp), 2000);
+    tft_ctrl::clearTempOnHueCircle(temp);
+    tft_ctrl::drawHueCircle();
 }

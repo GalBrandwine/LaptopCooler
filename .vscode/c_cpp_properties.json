@@ -18,14 +18,14 @@
             "includePath": [
                 "/home/gal/.arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino",
                 "/home/gal/.arduino15/packages/arduino/hardware/avr/1.8.6/variants/eightanaloginputs",
-                "/home/gal/Arduino/libraries/FastLED/src",
-                "/home/gal/.arduino15/packages/arduino/hardware/avr/1.8.6/libraries/EEPROM/src",
-                "/home/gal/Arduino/libraries/DHT_sensor_library",
                 "/home/gal/.arduino15/packages/arduino/hardware/avr/1.8.6/libraries/SPI/src",
                 "/home/gal/Arduino/libraries/Adafruit_GFX_Library",
                 "/home/gal/Arduino/libraries/Adafruit_BusIO",
                 "/home/gal/.arduino15/packages/arduino/hardware/avr/1.8.6/libraries/Wire/src",
                 "/home/gal/Arduino/libraries/Adafruit_ILI9340",
+                "/home/gal/Arduino/libraries/FastLED/src",
+                "/home/gal/.arduino15/packages/arduino/hardware/avr/1.8.6/libraries/EEPROM/src",
+                "/home/gal/Arduino/libraries/DHT_sensor_library",
                 "/home/gal/Arduino/libraries/Adafruit_Unified_Sensor",
                 "/home/gal/.arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include",
                 "/home/gal/.arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include-fixed",
@@ -540,7 +540,8 @@
                 "__ATOMIC_RELEASE=3",
                 "__BUILTIN_AVR_FMUL=1",
                 "USBCON"
-            ]
+            ],
+            "compileCommands": "${workspaceFolder}/output/compile_commands.json"
         }
     ]
 }
