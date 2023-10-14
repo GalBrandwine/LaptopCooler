@@ -50,75 +50,15 @@ namespace tft_ctrl
 
     void setup()
     {
-        // Serial.begin(9600);
-        // while (!Serial)
-        //     ;
 
         Serial.println("Adafruit 2.2\" SPI TFT setting up!");
         tft = new Adafruit_ILI9340(cs, dc, mosi, sclk, rst, miso);
         tft->begin();
         tft->setRotation(1);
 
-        // Serial.println(F("Benchmark                Time (microseconds)"));
-        // Serial.print(F("Screen fill              "));
-        // Serial.println(testFillScreen());
-        // delay(500);
-
-        // Serial.print(F("Text                     "));
-        // Serial.println(testText());
-        // delay(3000);
-
-        // Serial.print(F("Lines                    "));
-        // Serial.println(testLines(ILI9340_CYAN));
-        // delay(500);
-
-        // Serial.print(F("Horiz/Vert Lines         "));
-        // Serial.println(testFastLines(ILI9340_RED, ILI9340_BLUE));
-        // delay(500);
-
-        // Serial.print(F("Rectangles (outline)     "));
-        // Serial.println(testRects(ILI9340_GREEN));
-        // delay(500);
-
-        // Serial.print(F("Rectangles (filled)      "));
-        // Serial.println(testFilledRects(ILI9340_YELLOW, ILI9340_MAGENTA));
-        // delay(500);
-
-        // Serial.print(F("Circles (filled)         "));
-        // Serial.println(testFilledCircles(10, ILI9340_MAGENTA));
-
-        // Serial.print(F("Circles (outline)        "));
-        // Serial.println(testCircles(10, ILI9340_WHITE));
-        // delay(500);
-
-        // Serial.print(F("Triangles (outline)      "));
-        // Serial.println(testTriangles());
-        // delay(500);
-
-        // Serial.print(F("Triangles (filled)       "));
-        // Serial.println(testFilledTriangles());
-        // delay(500);
-
-        // Serial.print(F("Rounded rects (outline)  "));
-        // Serial.println(testRoundRects());
-        // delay(500);
-
-        // Serial.print(F("Rounded rects (filled)   "));
-        // Serial.println(testFilledRoundRects());
-        // delay(500);
-
         Serial.println(F("TFT controller Done setup!"));
     }
 
-    // void loop(void)
-    // {
-    //     for (uint8_t rotation = 0; rotation < 4; rotation++)
-    //     {
-    //         tft->setRotation(rotation);
-    //         testText();
-    //         delay(2000);
-    //     }
-    // }
     unsigned long clearScreen()
     {
         unsigned long start = micros();
@@ -355,12 +295,11 @@ namespace tft_ctrl
         CRGB rgb;
         Serial.print("got temp: ");
         Serial.print(temperature);
-        // Convert temp to hue
-        auto hue = map(temperature, 50, 0, 0, 160); // Lower TEMP gets bluer HUE
+
+        auto hue = map(temperature, 50, 0, 0, 160);
         Serial.print("converted to hue: ");
         Serial.print(hue);
-        // Convert hue to angle
-        auto angle_deg = map(hue, 0, 255, 0, 360); // Lower TEMP gets bluer HUE
+        auto angle_deg = map(hue, 0, 255, 0, 360);
         Serial.print("converted to angle: ");
         Serial.print(angle_deg);
 
@@ -387,7 +326,6 @@ namespace tft_ctrl
         auto y = center_y + radius * sin(angle_deg * PI / 180);
         auto hsv_hue = map(angle_deg, 0, 359, 0, 255);
 
-        // tft->drawCircle(x, y, 5, ILI9340_WHITE);
         rgb.setHue(hsv_hue);
         auto tft_color = tft->Color565(rgb.r, rgb.g, rgb.b);
         tft->fillCircle(x, y, 5, tft_color);
