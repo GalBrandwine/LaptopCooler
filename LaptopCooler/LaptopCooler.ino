@@ -144,6 +144,8 @@ void loop()
     hum = dht.readHumidity();
     // temp = dht.readTemperature();
     temp++;
+    temp = int(temp) % 360;
+    
     // Print temp and humidity values to serial monitor
     Serial.print("Humidity: ");
     Serial.print(hum);
@@ -170,7 +172,11 @@ void loop()
     // tft_ctrl::clearScreen();
     // tft_ctrl::drawHueCircle();
     tft_ctrl::drawTempOnHueCircle(temp);
+    tft_ctrl::printBoxedFloat(temp);
     showProgramColorByTemp(int(temp), 2000);
+
+    // Prepare screen for next iteration
     tft_ctrl::clearTempOnHueCircle(temp);
+    tft_ctrl::clearBoxedFloat();
     tft_ctrl::drawHueCircle();
 }

@@ -263,6 +263,74 @@ namespace tft_ctrl
         auto radius{ILI9340_TFTWIDTH / 2};
         return tft_ctrl::drawCircle(center_x, center_y, radius, ILI9340_WHITE);
     }
+    void printBoxedFloat(float toPrint)
+    {
+
+        int center_x;
+        int center_y;
+        int radius;
+        switch (tft->getRotation())
+        {
+        case 0:
+            center_x = ILI9340_TFTWIDTH / 2;
+            center_y = ILI9340_TFTHEIGHT / 2;
+            radius = ILI9340_TFTWIDTH / 2 - 5;
+            break;
+        case 1:
+            center_x = ILI9340_TFTHEIGHT / 2;
+            center_y = ILI9340_TFTWIDTH / 2;
+            radius = ILI9340_TFTWIDTH / 2 - 5;
+            break;
+        default:
+            break;
+        }
+        auto scaled_radius = radius * 0.75;
+
+        auto top_left_corner_x = center_x - scaled_radius * cos(radians(180 - 160)); // cos(angle_deg * PI / 180)
+        auto top_left_corner_y = center_y - scaled_radius * sin(radians(180 - 160));
+        // For debug
+        // auto width = abs(center_x - top_left_corner_x) * 2;
+        // auto height = abs(center_y - top_left_corner_y) * 2;
+        // tft->drawRect(top_left_corner_x, top_left_corner_y, width, height, ILI9340_DFUNCTR);
+
+        // Write temperature on screen
+        tft->setTextSize(2);
+        tft->setCursor(top_left_corner_x + 5, top_left_corner_y + 5);
+        tft->println("Tmp: ");
+        tft->setCursor(top_left_corner_x + 5, tft->getCursorY() + 5);
+        tft->print(toPrint);
+        tft->println(" [C]");
+        tft->setTextSize(1);
+    }
+    void clearBoxedFloat()
+    {
+
+        int center_x;
+        int center_y;
+        int radius;
+        switch (tft->getRotation())
+        {
+        case 0:
+            center_x = ILI9340_TFTWIDTH / 2;
+            center_y = ILI9340_TFTHEIGHT / 2;
+            radius = ILI9340_TFTWIDTH / 2 - 5;
+            break;
+        case 1:
+            center_x = ILI9340_TFTHEIGHT / 2;
+            center_y = ILI9340_TFTWIDTH / 2;
+            radius = ILI9340_TFTWIDTH / 2 - 5;
+            break;
+        default:
+            break;
+        }
+        auto scaled_radius = radius * 0.75;
+
+        auto top_left_corner_x = center_x - scaled_radius * cos(radians(180 - 160)); // cos(angle_deg * PI / 180)
+        auto top_left_corner_y = center_y - scaled_radius * sin(radians(180 - 160));
+        auto width = abs(center_x - top_left_corner_x) * 2;
+        auto height = abs(center_y - top_left_corner_y) * 2;
+        tft->fillRect(top_left_corner_x, top_left_corner_y, width, height, ILI9340_BLACK);
+    }
     void clearTempOnHueCircle(int temperature)
     {
         int center_x;
